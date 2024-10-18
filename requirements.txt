@@ -1,0 +1,8 @@
+psycopg2
+boto3
+h5py
+numpy
+pillow
+requests
+beautifulsoup4
+
