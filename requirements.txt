@@ -1,6 +1,6 @@
 psycopg2
 boto3
-h5py=3.8.0
+h5py==3.8.0
 numpy==1.23.5
 pillow
 requests
