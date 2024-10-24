@@ -1,8 +1,9 @@
-psycopg2
-boto3
+psycopg2==2.9.6
+boto3==1.28.57
 h5py==3.8.0
-numpy==1.23.5
-pillow
-requests
-beautifulsoup4
-matplotlib
+numpy==1.26.4
+pillow==9.5.0
+requests==2.31.0
+beautifulsoup4==4.12.2
+matplotlib==3.8.0
+sklearn
