@@ -1,9 +1,9 @@
-psycopg2==2.9.6
-boto3==1.28.57
 h5py==3.8.0
-numpy==1.26.4
-pillow==9.5.0
-requests==2.31.0
-beautifulsoup4==4.12.2
-matplotlib==3.8.0
-sklearn
+torch==2.2.2
+transformers==4.38.0
+numpy==1.23.1
+ipywidgets==8.1.5
+widgetsnbextension==4.0.13
+scipy==1.13.0
+scikit-learn==1.5.0
+torchvision==0.17.2

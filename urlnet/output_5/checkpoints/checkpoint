@@ -1,5 +1,0 @@
-model_checkpoint_path: "C://Users/ruofan/Desktop/urlnet/output_5/checkpoints/model-2430"
-all_model_checkpoint_paths: "C://Users/ruofan/Desktop/urlnet/output_5/checkpoints/model-500"
-all_model_checkpoint_paths: "C://Users/ruofan/Desktop/urlnet/output_5/checkpoints/model-1000"
-all_model_checkpoint_paths: "C://Users/ruofan/Desktop/urlnet/output_5/checkpoints/model-1500"
-all_model_checkpoint_paths: "C://Users/ruofan/Desktop/urlnet/output_5/checkpoints/model-2430"
