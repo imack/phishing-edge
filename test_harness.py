@@ -28,16 +28,15 @@ def test_harness(model, epochs=10, batch_size=8, learning_rate=2e-5):
         total_loss = 0
         progress_bar = tqdm(train_dataloader, desc=f"Epoch {epoch + 1}/{epochs}")
         for batch in progress_bar:
-            labels = batch['label'].to(device)
+            optimizer.zero_grad()
 
+            labels = batch['label'].to(device)
             images = batch['image'].to(device) if 'image' in batch else None
             url_input_ids = batch['url_input_ids'].to(device)
             url_attention_mask = batch['url_attention_mask'].to(device)
 
             html_input_ids = batch['html_input_ids'].to(device) if 'html_input_ids' in batch else None
             html_attention_mask = batch['html_attention_mask'].to(device)  if 'html_attention_mask' in batch else None
-
-            optimizer.zero_grad()
 
             inputs = {
                 'image': images,

@@ -10,10 +10,24 @@ def evaluate_model(model, dataloader, device, criterion = nn.CrossEntropyLoss())
 
     with torch.no_grad():
         for batch in dataloader:
-            images = batch['image'].to(device)
             labels = batch['label'].to(device)
+            images = batch['image'].to(device) if 'image' in batch else None
+            url_input_ids = batch['url_input_ids'].to(device)
+            url_attention_mask = batch['url_attention_mask'].to(device)
 
-            outputs = model(images)
+            html_input_ids = batch['html_input_ids'].to(device) if 'html_input_ids' in batch else None
+            html_attention_mask = batch['html_attention_mask'].to(device)  if 'html_attention_mask' in batch else None
+
+            inputs = {
+                'image': images,
+                'url_input_ids': url_input_ids,
+                'url_attention_mask': url_attention_mask,
+                'html_input_ids': html_input_ids,
+                'html_attention_mask': html_attention_mask
+            }
+
+            filtered_inputs = {k: v for k, v in inputs.items() if v is not None}
+            outputs = model(**filtered_inputs)
 
             loss = criterion(outputs, labels)
             total_loss += loss.item()
