@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from tqdm.notebook import tqdm
-from utils import evaluate_model
+from utils import evaluate_model, get_filtered_inputs
 import torch.optim as optim
 import inspect
 dataset_path = os.path.expanduser("~/transfer/phishing_output.h5")
@@ -17,7 +17,7 @@ def test_harness(model, epochs=10, batch_size=8, learning_rate=2e-5):
     test_dataset = PhishingDataset(dataset_path, required_data, split='test')
     test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-    writer = SummaryWriter(model.test_name())
+    writer = SummaryWriter(f"runs/{model.test_name()}")
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
 
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate)
@@ -31,22 +31,7 @@ def test_harness(model, epochs=10, batch_size=8, learning_rate=2e-5):
             optimizer.zero_grad()
 
             labels = batch['label'].to(device)
-            images = batch['image'].to(device) if 'image' in batch else None
-            url_input_ids = batch['url_input_ids'].to(device)
-            url_attention_mask = batch['url_attention_mask'].to(device)
-
-            html_input_ids = batch['html_input_ids'].to(device) if 'html_input_ids' in batch else None
-            html_attention_mask = batch['html_attention_mask'].to(device)  if 'html_attention_mask' in batch else None
-
-            inputs = {
-                'image': images,
-                'url_input_ids': url_input_ids,
-                'url_attention_mask': url_attention_mask,
-                'html_input_ids': html_input_ids,
-                'html_attention_mask': html_attention_mask
-            }
-
-            filtered_inputs = {k: v for k, v in inputs.items() if v is not None}
+            filtered_inputs = get_filtered_inputs(batch)
             outputs = model(**filtered_inputs)
 
             loss = criterion(outputs, labels)
