@@ -61,11 +61,11 @@ class PhishingDataset(Dataset):
         )
 
         input_dict = {
-            'html_input_ids': encoded_html_input['input_ids'] if encoded_html_input else None,
-            'html_attention_mask': encoded_html_input['attention_mask'] if encoded_html_input else None,
+            'html_input_ids': encoded_html_input['input_ids'] if encoded_html_input is not None else None,
+            'html_attention_mask': encoded_html_input['attention_mask'] if encoded_html_input is not None else None,
             'url_input_ids': encoded_url_input['input_ids'].squeeze(),
             'url_attention_mask': encoded_url_input['attention_mask'].squeeze(),
-            'image': image if image else None,
+            'image': image if image is not None and image.numel() > 0 else None,
             'label': label
         }
 

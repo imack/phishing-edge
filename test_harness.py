@@ -50,7 +50,7 @@ def test_harness(model, epochs=10, batch_size=8, learning_rate=2e-5):
         writer.add_scalar("Loss/test", loss, epoch)
         writer.add_scalar("Accuracy/test", accuracy, epoch)
         print(
-            f"Epoch {epoch + 1}/{epochs}, Loss: {loss:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1 Score: {f1:.4f}, Accuracy: {accuracy:.4f}")
+            f"Epoch {epoch + 1}/{epochs}, Test Loss: {loss:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1 Score: {f1:.4f}, Accuracy: {accuracy:.4f}")
         writer.flush()
     writer.close()
 
