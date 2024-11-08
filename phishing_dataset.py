@@ -9,6 +9,7 @@ class PhishingDataset(Dataset):
         self.file = h5py.File(h5_file, 'r')
         self.labels = self.file[f'{split}/labels'][:]
         self.tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
+        self.required_data = required_data
 
         if 'image' in required_data:
             self.screenshots = self.file[f'{split}/screenshots'][:]
@@ -51,7 +52,6 @@ class PhishingDataset(Dataset):
                 return_tensors='pt'
             )
 
-        # tokenize url contet
         encoded_url_input = self.tokenizer(
             url,
             padding='max_length',
@@ -60,11 +60,13 @@ class PhishingDataset(Dataset):
             return_tensors='pt'
         )
 
+        needs_url = 'url_input_ids' in self.required_data
+
         input_dict = {
-            'html_input_ids': encoded_html_input['input_ids'] if encoded_html_input is not None else None,
-            'html_attention_mask': encoded_html_input['attention_mask'] if encoded_html_input is not None else None,
-            'url_input_ids': encoded_url_input['input_ids'].squeeze(),
-            'url_attention_mask': encoded_url_input['attention_mask'].squeeze(),
+            'html_input_ids': encoded_html_input['input_ids'].squeeze() if encoded_html_input is not None else None,
+            'html_attention_mask': encoded_html_input['attention_mask'].squeeze() if encoded_html_input is not None else None,
+            'url_input_ids': encoded_url_input['input_ids'].squeeze() if needs_url else None,
+            'url_attention_mask': encoded_url_input['attention_mask'].squeeze() if needs_url else None,
             'image': image if image is not None and image.numel() > 0 else None,
             'label': label
         }

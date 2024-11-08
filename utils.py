@@ -7,8 +7,8 @@ def get_filtered_inputs(batch):
         'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
 
     images = batch['image'].to(device) if 'image' in batch else None
-    url_input_ids = batch['url_input_ids'].to(device)
-    url_attention_mask = batch['url_attention_mask'].to(device)
+    url_input_ids = batch['url_input_ids'].to(device) if 'url_input_ids' in batch else None
+    url_attention_mask = batch['url_attention_mask'].to(device) if 'url_attention_mask' in batch else None
 
     html_input_ids = batch['html_input_ids'].to(device) if 'html_input_ids' in batch else None
     html_attention_mask = batch['html_attention_mask'].to(device) if 'html_attention_mask' in batch else None
