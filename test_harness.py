@@ -3,7 +3,7 @@ from torch.utils.tensorboard import SummaryWriter
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from utils import evaluate_model, get_filtered_inputs
 import torch.optim as optim
 import inspect
@@ -24,7 +24,7 @@ def test_harness(model, local_dataset=None, epochs=10, batch_size=8, learning_ra
     for epoch in range(epochs):
         model.train()
         total_loss = 0
-        progress_bar = tqdm(train_dataloader, desc=f"Epoch {epoch + 1}/{epochs}")
+        progress_bar = tqdm(train_dataloader, desc=f"Epoch {epoch + 1}/{epochs}", leave=True)
         for batch in progress_bar:
             optimizer.zero_grad()
 
