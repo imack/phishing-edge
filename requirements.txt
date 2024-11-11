@@ -1,4 +1,4 @@
-h5py==3.8.0
+h5py~=3.9.0
 torch==2.2.2
 transformers==4.38.0
 numpy==1.23.1
@@ -8,3 +8,5 @@ scipy==1.13.0
 scikit-learn==1.5.0
 torchvision==0.17.2
 tensorboard==2.18.0
+boto3~=1.35.57
+tqdm~=4.66.6

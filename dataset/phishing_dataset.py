@@ -1,15 +1,31 @@
 from torch.utils.data import Dataset
 import h5py
 import torch
+import tempfile
+import boto3
 from transformers import DistilBertTokenizer
 import torchvision.transforms as transforms
 
+S3_PATH = 's3://phishing-edge/dataset/phishing_output.h5'
+
 class PhishingDataset(Dataset):
-    def __init__(self, h5_file, required_data, split='train'):
-        self.file = h5py.File(h5_file, 'r')
-        self.labels = self.file[f'{split}/labels'][:]
+    def __init__(self,required_data, split='train', local_file_path=None):
         self.tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
         self.required_data = required_data
+
+        if local_file_path is None:
+            print(f"Downloading data from s3://{S3_PATH}")
+            # Use a temporary file to store the downloaded dataset
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                local_file_path = temp_file.name
+
+            s3 = boto3.client('s3')
+            bucket, key = self._parse_s3_path(S3_PATH)
+            s3.download_file(bucket, key, local_file_path)
+            print("Download Complete")
+
+        self.file = h5py.File(local_file_path, 'r')
+        self.labels = self.file[f'{split}/labels'][:]
 
         if 'image' in required_data:
             self.screenshots = self.file[f'{split}/screenshots'][:]
@@ -25,6 +41,11 @@ class PhishingDataset(Dataset):
         if 'html_input_ids' in required_data:
             self.html_content = self.file[f'{split}/html_content'][:]
 
+    def _parse_s3_path(self, s3_path):
+        path_parts = s3_path.replace("s3://", "").split("/", 1)
+        bucket = path_parts[0]
+        key = path_parts[1]
+        return bucket, key
 
     def __len__(self):
         return len(self.labels)

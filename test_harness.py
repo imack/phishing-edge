@@ -1,5 +1,4 @@
-from phishing_dataset import PhishingDataset
-import os
+from dataset.phishing_dataset import PhishingDataset
 from torch.utils.tensorboard import SummaryWriter
 import torch
 import torch.nn as nn
@@ -8,13 +7,12 @@ from tqdm.notebook import tqdm
 from utils import evaluate_model, get_filtered_inputs
 import torch.optim as optim
 import inspect
-dataset_path = os.path.expanduser("~/transfer/phishing_output.h5")
 
-def test_harness(model, epochs=10, batch_size=8, learning_rate=2e-5):
+def test_harness(model, local_dataset=None, epochs=10, batch_size=8, learning_rate=2e-5):
     required_data = inspect.signature(model.forward).parameters.keys()
-    train_dataset = PhishingDataset(dataset_path, required_data, split='train')
+    train_dataset = PhishingDataset(required_data, split='train', local_file_path=local_dataset)
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    test_dataset = PhishingDataset(dataset_path, required_data, split='test')
+    test_dataset = PhishingDataset(required_data, split='test', local_file_path=local_dataset)
     test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
     writer = SummaryWriter(f"runs/{model.test_name()}")
