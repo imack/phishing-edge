@@ -6,7 +6,7 @@ ipywidgets==8.1.5
 widgetsnbextension==4.0.13
 scipy==1.13.0
 scikit-learn==1.5.0
-torchvision==0.16.1
+torchvision==0.16.0
 tensorboard==2.18.0
 boto3~=1.35.57
 tqdm~=4.66.6
