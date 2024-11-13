@@ -1,9 +1,9 @@
 from torch.utils.data import Dataset
 import h5py
 import torch
+import tempfile
 import boto3
-import os
-import subprocess
+import time
 from transformers import DistilBertTokenizer
 import torchvision.transforms as transforms
 
@@ -15,37 +15,16 @@ class PhishingDataset(Dataset):
         self.required_data = required_data
 
         if local_file_path is None:
+            print(f"Downloading data from {S3_PATH}")
+            start_time = time.time()
+            # Use a temporary file to store the downloaded dataset
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                local_file_path = temp_file.name
 
-            efs_mount_point = '/mnt/efs/data'
-            efs_dns_name = 'fs-0090157917ad449f7.efs.us-east-2.amazonaws.com'  # EFS DNS name
-
-            # Create the directory if it doesn't exist
-            os.makedirs(efs_mount_point, exist_ok=True)
-
-            try:
-                subprocess.run(
-                    ['mount', '-t', 'nfs4', f'{efs_dns_name}:/', efs_mount_point],
-                    check=True
-                )
-                print("EFS mounted successfully.")
-            except subprocess.CalledProcessError as e:
-                print(f"Failed to mount EFS: {e}")
-
-            # Now you can proceed with your usual training code
-            # Example: Access data from EFS
-            efs_data_path = os.path.join(efs_mount_point, 'phishing_output.h5')
-            print(f"Data path on EFS: {efs_data_path}")
-
-            local_file_path = '/mnt/efs/data/phishing_output.h5'
-            if not os.path.exists(local_file_path):
-                print(f"Downloading data from s3://{S3_PATH}")
-
-                s3 = boto3.client('s3')
-                bucket, key = self._parse_s3_path(S3_PATH)
-                s3.download_file(bucket, key, local_file_path)
-                print("Download Complete")
-            else:
-                print(f"{local_file_path} already exists")
+            s3 = boto3.client('s3')
+            bucket, key = self._parse_s3_path(S3_PATH)
+            s3.download_file(bucket, key, local_file_path)
+            print(f"Download Complete in {(time.time() - start_time):.2f} seconds")
 
         self.file = h5py.File(local_file_path, 'r')
         self.labels = self.file[f'{split}/labels'][:]

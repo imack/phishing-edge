@@ -1,11 +1,5 @@
 import argparse
 import os
-current_directory = os.getcwd()
-print(f"Current directory: {current_directory}")
-contents = os.listdir(current_directory)
-print("Contents of the current directory:")
-for item in contents:
-    print(item)
 import torch
 import torch.utils.data
 from classifiers.basic_transformer_classifier import BasicTransformerClassifier
