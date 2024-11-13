@@ -1,5 +1,11 @@
 import argparse
 import os
+current_directory = os.getcwd()
+print(f"Current directory: {current_directory}")
+contents = os.listdir(current_directory)
+print("Contents of the current directory:")
+for item in contents:
+    print(item)
 import torch
 import torch.utils.data
 from basic_transformer_classifier import BasicTransformerClassifier
@@ -9,7 +15,6 @@ import shutil
 # Define paths where SageMaker inputs and outputs data
 INPUT_DIR = "/opt/ml/input/data"
 OUTPUT_DIR = "/opt/ml/model"
-
 
 dataset_path = os.path.expanduser("~/transfer/phishing_output.h5")
 
