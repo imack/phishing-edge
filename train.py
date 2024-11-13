@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/opt/ml/code')
+
 import argparse
 import os
 import torch
@@ -9,6 +12,7 @@ import shutil
 # Define paths where SageMaker inputs and outputs data
 INPUT_DIR = "/opt/ml/input/data"
 OUTPUT_DIR = "/opt/ml/model"
+
 
 dataset_path = os.path.expanduser("~/transfer/phishing_output.h5")
 
