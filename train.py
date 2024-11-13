@@ -1,5 +1,9 @@
 import argparse
 import os
+efs_mount_path = '/mnt/efs'
+if not os.path.exists(efs_mount_path):
+    os.makedirs(efs_mount_path)
+
 import torch
 import torch.utils.data
 from classifiers.basic_transformer_classifier import BasicTransformerClassifier
