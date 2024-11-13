@@ -12,7 +12,7 @@ def test_harness(model, local_dataset=None, epochs=10, batch_size=8, learning_ra
     required_data = inspect.signature(model.forward).parameters.keys()
     num_workers = 0
     if torch.cuda.is_available():
-        num_workers = 4
+        num_workers = 8
     train_dataset = PhishingDataset(required_data, split='train', local_file_path=local_dataset)
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, pin_memory=True, num_workers=num_workers)
     test_dataset = PhishingDataset(required_data, split='test', local_file_path=local_dataset)
