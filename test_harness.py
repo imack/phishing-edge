@@ -1,4 +1,4 @@
-from dataset.phishing_dataset import PhishingDataset
+from phishing_dataset import PhishingDataset
 from torch.utils.tensorboard import SummaryWriter
 import torch
 import torch.nn as nn

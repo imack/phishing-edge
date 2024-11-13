@@ -1,11 +1,8 @@
-import sys
-sys.path.append('/opt/ml/code')
-
 import argparse
 import os
 import torch
 import torch.utils.data
-from classifiers.basic_transformer_classifier import BasicTransformerClassifier
+from basic_transformer_classifier import BasicTransformerClassifier
 from test_harness import test_harness
 import shutil
 
