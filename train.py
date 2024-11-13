@@ -16,14 +16,12 @@ import shutil
 INPUT_DIR = "/opt/ml/input/data"
 OUTPUT_DIR = "/opt/ml/model"
 
-dataset_path = os.path.expanduser("~/transfer/phishing_output.h5")
-
 def train(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
     print(f"Using Device: {device}")
 
     model = BasicTransformerClassifier().to(device)
-    test_harness(model, local_dataset=dataset_path, epochs=args.epochs, learning_rate=args.lr)
+    test_harness(model, epochs=args.epochs, learning_rate=args.lr)
     torch.save(model.state_dict(), f"models/{model.test_name()}_phishing_classifier.pt")
 
     if not os.path.exists(OUTPUT_DIR):
