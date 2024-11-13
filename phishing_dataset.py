@@ -1,7 +1,6 @@
 from torch.utils.data import Dataset
 import h5py
 import torch
-import tempfile
 import boto3
 from transformers import DistilBertTokenizer
 import torchvision.transforms as transforms
@@ -16,9 +15,7 @@ class PhishingDataset(Dataset):
         if local_file_path is None:
             print(f"Downloading data from s3://{S3_PATH}")
             # Use a temporary file to store the downloaded dataset
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                local_file_path = temp_file.name
-
+            local_file_path = '/mnt/efs/data'
             s3 = boto3.client('s3')
             bucket, key = self._parse_s3_path(S3_PATH)
             s3.download_file(bucket, key, local_file_path)
