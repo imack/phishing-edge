@@ -8,18 +8,17 @@ from transformers import DistilBertTokenizer
 import torchvision.transforms as transforms
 
 S3_PATH = 's3://phishing-edge/dataset/phishing_output.h5'
-LOCAL_CACHE_PATH = '/tmp/phishing_output.h5'
+EFS_MOUNT_PATH = '/mnt/efs/phishing_output.h5'
 
 class PhishingDataset(Dataset):
     def __init__(self, required_data, split='train', local_file_path=None):
         self.tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
         self.required_data = required_data
 
-        # Check if the file is already downloaded or use the given path
         if local_file_path is None:
-            local_file_path = LOCAL_CACHE_PATH
+            local_file_path = EFS_MOUNT_PATH
             if not os.path.exists(local_file_path):
-                print(f"Downloading data from {S3_PATH}")
+                print(f"Downloading data from {S3_PATH} to {local_file_path}")
                 start_time = time.time()
                 s3 = boto3.client('s3')
                 bucket, key = self._parse_s3_path(S3_PATH)
