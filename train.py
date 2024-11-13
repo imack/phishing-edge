@@ -8,7 +8,7 @@ for item in contents:
     print(item)
 import torch
 import torch.utils.data
-from basic_transformer_classifier import BasicTransformerClassifier
+from classifiers.basic_transformer_classifier import BasicTransformerClassifier
 from test_harness import test_harness
 import shutil
 

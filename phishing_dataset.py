@@ -2,6 +2,7 @@ from torch.utils.data import Dataset
 import h5py
 import torch
 import boto3
+import os
 from transformers import DistilBertTokenizer
 import torchvision.transforms as transforms
 
@@ -13,13 +14,16 @@ class PhishingDataset(Dataset):
         self.required_data = required_data
 
         if local_file_path is None:
-            print(f"Downloading data from s3://{S3_PATH}")
-            # Use a temporary file to store the downloaded dataset
-            local_file_path = '/mnt/efs/data'
-            s3 = boto3.client('s3')
-            bucket, key = self._parse_s3_path(S3_PATH)
-            s3.download_file(bucket, key, local_file_path)
-            print("Download Complete")
+            local_file_path = '/mnt/efs/data/phishing_output.h5'
+            if not os.path.exists(local_file_path):
+                print(f"Downloading data from s3://{S3_PATH}")
+
+                s3 = boto3.client('s3')
+                bucket, key = self._parse_s3_path(S3_PATH)
+                s3.download_file(bucket, key, local_file_path)
+                print("Download Complete")
+            else:
+                print(f"{local_file_path} already exists")
 
         self.file = h5py.File(local_file_path, 'r')
         self.labels = self.file[f'{split}/labels'][:]
