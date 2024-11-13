@@ -8,7 +8,7 @@ from transformers import DistilBertTokenizer
 import torchvision.transforms as transforms
 
 S3_PATH = 's3://phishing-edge/dataset/phishing_output.h5'
-EFS_MOUNT_PATH = '/opt/ml/input/efs/phishing_output.h5'
+EFS_MOUNT_PATH = '/opt/ml/input/phishing_output.h5'
 
 class PhishingDataset(Dataset):
     def __init__(self, required_data, split='train', local_file_path=None):
