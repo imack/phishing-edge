@@ -1,30 +1,32 @@
 from torch.utils.data import Dataset
 import h5py
 import torch
-import tempfile
+import os
 import boto3
 import time
 from transformers import DistilBertTokenizer
 import torchvision.transforms as transforms
 
 S3_PATH = 's3://phishing-edge/dataset/phishing_output.h5'
+LOCAL_CACHE_PATH = '/tmp/phishing_output.h5'
 
 class PhishingDataset(Dataset):
-    def __init__(self,required_data, split='train', local_file_path=None):
+    def __init__(self, required_data, split='train', local_file_path=None):
         self.tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
         self.required_data = required_data
 
+        # Check if the file is already downloaded or use the given path
         if local_file_path is None:
-            print(f"Downloading data from {S3_PATH}")
-            start_time = time.time()
-            # Use a temporary file to store the downloaded dataset
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                local_file_path = temp_file.name
-
-            s3 = boto3.client('s3')
-            bucket, key = self._parse_s3_path(S3_PATH)
-            s3.download_file(bucket, key, local_file_path)
-            print(f"Download Complete in {(time.time() - start_time):.2f} seconds")
+            local_file_path = LOCAL_CACHE_PATH
+            if not os.path.exists(local_file_path):
+                print(f"Downloading data from {S3_PATH}")
+                start_time = time.time()
+                s3 = boto3.client('s3')
+                bucket, key = self._parse_s3_path(S3_PATH)
+                s3.download_file(bucket, key, local_file_path)
+                print(f"Download Complete in {(time.time() - start_time):.2f} seconds")
+            else:
+                print(f"Using cached dataset at {local_file_path}")
 
         self.file = h5py.File(local_file_path, 'r')
         self.labels = self.file[f'{split}/labels'][:]
@@ -58,7 +60,7 @@ class PhishingDataset(Dataset):
         encoded_html_input = None
         image = None
 
-        if  hasattr(self, 'screenshots'):
+        if hasattr(self, 'screenshots'):
             screenshot = self.screenshots[idx]
             image = self.transform(screenshot)
 
