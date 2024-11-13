@@ -10,10 +10,13 @@ import inspect
 
 def test_harness(model, local_dataset=None, epochs=10, batch_size=8, learning_rate=2e-5):
     required_data = inspect.signature(model.forward).parameters.keys()
+    num_workers = 0
+    if torch.cuda.is_available():
+        num_workers = 4
     train_dataset = PhishingDataset(required_data, split='train', local_file_path=local_dataset)
-    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, pin_memory=True, num_workers=4)
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, pin_memory=True, num_workers=num_workers)
     test_dataset = PhishingDataset(required_data, split='test', local_file_path=local_dataset)
-    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, pin_memory=True, num_workers=4)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, pin_memory=True, num_workers=num_workers)
 
     writer = SummaryWriter(f"runs/{model.test_name()}")
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
