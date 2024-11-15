@@ -7,6 +7,7 @@ if not os.path.exists(efs_mount_path):
 import torch
 import torch.utils.data
 from classifiers.basic_transformer_classifier import BasicTransformerClassifier
+from classifiers.squeezenet_only_classifier import SqueezenetClassifier
 from test_harness import test_harness
 import shutil
 
@@ -18,7 +19,7 @@ def train(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
     print(f"Using Device: {device}")
 
-    model = BasicTransformerClassifier().to(device)
+    model = SqueezenetClassifier().to(device)
     test_harness(model, epochs=args.epochs, learning_rate=args.lr)
     torch.save(model.state_dict(), f"models/{model.test_name()}_phishing_classifier.pt")
 
