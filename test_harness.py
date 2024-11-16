@@ -27,7 +27,7 @@ def test_harness(model, local_dataset=None, epochs=10, batch_size=8, learning_ra
     for epoch in range(epochs):
         model.train()
         total_loss = 0
-        progress_bar = tqdm(train_dataloader, desc=f"Epoch {epoch + 1}/{epochs}", miniters=1000, leave=True)
+        progress_bar = tqdm(train_dataloader, desc=f"Epoch {epoch + 1}/{epochs}", leave=True, miniters=len(train_dataloader) // 10)
         for batch in progress_bar:
             optimizer.zero_grad()
 
