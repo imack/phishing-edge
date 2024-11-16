@@ -1,5 +1,8 @@
 import argparse
 import os
+
+from classifiers.vgg_only_classifier import VGGClassifier
+
 efs_mount_path = '/mnt/efs'
 if not os.path.exists(efs_mount_path):
     os.makedirs(efs_mount_path)
@@ -19,7 +22,7 @@ def train(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
     print(f"Using Device: {device}")
 
-    model = SqueezenetClassifier().to(device)
+    model = VGGClassifier().to(device)
     test_harness(model, epochs=args.epochs, learning_rate=args.lr)
     torch.save(model.state_dict(), f"models/{model.test_name()}_phishing_classifier.pt")
 
