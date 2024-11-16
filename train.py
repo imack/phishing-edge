@@ -41,7 +41,7 @@ if __name__ == "__main__":
     parser.add_argument("--train_data_path", type=str, default=os.path.join(INPUT_DIR, "train"))
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--epochs", type=int, default=10)
-    parser.add_argument("--lr", type=float, default=0.001)
+    parser.add_argument("--lr", type=float, default=0.01)
 
     args = parser.parse_args()
     train(args)
