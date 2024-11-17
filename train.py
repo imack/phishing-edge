@@ -24,7 +24,7 @@ def train(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
     print(f"Using Device: {device}")
 
-    model = EfficientNetClassifier().to(device)
+    model = MobileNetClassifier().to(device)
     test_harness(model, epochs=args.epochs, learning_rate=args.lr)
     torch.save(model.state_dict(), f"models/{model.test_name()}_phishing_classifier.pt")
 
