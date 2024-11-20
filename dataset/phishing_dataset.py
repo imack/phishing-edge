@@ -7,8 +7,8 @@ import time
 from transformers import DistilBertTokenizer
 import torchvision.transforms as transforms
 
-S3_PATH = 's3://phishing-edge/dataset/phishing_output.h5'
-LOCAL_CACHE_PATH = '/tmp/phishing_output.h5'
+S3_PATH = 's3://phishing-edge/dataset/phishing_output_tokenized.h5'
+LOCAL_CACHE_PATH = '/tmp/phishing_output_tokenized.h5'
 
 class PhishingDataset(Dataset):
     def __init__(self, required_data, split='train', local_file_path=None):
@@ -42,7 +42,16 @@ class PhishingDataset(Dataset):
         self.urls = self.file[f'{split}/urls'][:]
 
         if 'html_input_ids' in required_data:
-            self.html_content = self.file[f'{split}/html_content'][:]
+            self.html_input_ids = self.file[f'{split}/html_content'][:]
+
+        if 'html_attention_mask' in required_data:
+            self.html_attention_masks = self.file[f'{split}/html_attention_masks'][:]
+
+        if 'url_input_ids' in required_data:
+            self.url_input_ids = self.file[f'{split}/url_input_ids'][:]
+
+        if 'url_attention_mask' in required_data:
+            self.url_attention_masks = self.file[f'{split}/url_attention_masks'][:]
 
     def _parse_s3_path(self, s3_path):
         path_parts = s3_path.replace("s3://", "").split("/", 1)
@@ -63,34 +72,11 @@ class PhishingDataset(Dataset):
             screenshot = self.screenshots[idx]
             image = self.transform(screenshot)
 
-        if hasattr(self, 'html_content'):
-            html_content = self.html_content[idx].decode('utf-8')
-            text = f"URL: {url} CONTENT: {html_content}"
-
-            # tokenize the HTML content
-            encoded_html_input = self.tokenizer(
-                text,
-                padding='max_length',
-                truncation=True,
-                max_length=512,
-                return_tensors='pt'
-            )
-
-        encoded_url_input = self.tokenizer(
-            url,
-            padding='max_length',
-            truncation=True,
-            max_length=128,
-            return_tensors='pt'
-        )
-
-        needs_url = 'url_input_ids' in self.required_data
-
         input_dict = {
-            'html_input_ids': encoded_html_input['input_ids'].squeeze() if encoded_html_input is not None else None,
-            'html_attention_mask': encoded_html_input['attention_mask'].squeeze() if encoded_html_input is not None else None,
-            'url_input_ids': encoded_url_input['input_ids'].squeeze() if needs_url else None,
-            'url_attention_mask': encoded_url_input['attention_mask'].squeeze() if needs_url else None,
+            'html_input_ids': self.html_input_ids[idx].squeeze() if 'html_input_ids' in self.required_data else None,
+            'html_attention_mask': self.html_attention_masks[idx].squeeze() if 'html_input_ids' in self.required_data else None,
+            'url_input_ids': self.url_input_ids[idx].squeeze() if 'url_input_ids' in self.required_data else None,
+            'url_attention_mask': self.url_attention_masks[idx].squeeze() if 'url_attention_mask' in self.required_data else None,
             'image': image if image is not None and image.numel() > 0 else None,
             'label': label
         }
