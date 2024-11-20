@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+
 from utils import evaluate_model, get_filtered_inputs
 import torch.optim as optim
 import inspect
@@ -15,7 +16,7 @@ def test_harness(model, local_dataset=None, epochs=10, batch_size=8, learning_ra
         num_workers = 6
     train_dataset = PhishingDataset(required_data, split='train', local_file_path=local_dataset)
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, pin_memory=True, num_workers=num_workers)
-    test_dataset = PhishingDataset(required_data, split='test', local_file_path=local_dataset)
+    test_dataset = PhishingDataset(required_data, split='dev', local_file_path=local_dataset)
     test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, pin_memory=True, num_workers=num_workers)
 
     writer = SummaryWriter(f"runs/{model.test_name()}")
