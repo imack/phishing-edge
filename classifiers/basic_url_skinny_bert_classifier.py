@@ -1,9 +1,9 @@
 import torch.nn as nn
 from transformers import DistilBertModel
 
-class BasicUrlBertClassifier(nn.Module):
+class BasicUrlSkinnyBertClassifier(nn.Module):
     def __init__(self):
-        super(BasicUrlBertClassifier, self).__init__()
+        super(BasicUrlSkinnyBertClassifier, self).__init__()
 
         self.bert = DistilBertModel.from_pretrained('distilbert-base-uncased')
         # Use only the first 2 layers
