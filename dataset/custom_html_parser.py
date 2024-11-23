@@ -26,8 +26,8 @@ class CustomHTML2Text(html2text.HTML2Text):
                 domain = urlparse(href).netloc or "unknown"
                 if domain not in seen_domains:
                     seen_domains.add(domain)
-                    relation = link.get("rel", ["unknown"])[0]
-                    retained_tags.append(f"Link {domain} {relation}")
+                    relation = link.get("rel", [''])
+                    retained_tags.append(f"Link {domain} {relation[0] if relation else 'unknown'}")
 
         return "\n".join(retained_tags)
 
