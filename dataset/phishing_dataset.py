@@ -42,10 +42,16 @@ class PhishingDataset(Dataset):
         self.urls = self.file[f'{split}/urls'][:]
 
         if 'html_input_ids' in required_data:
-            self.html_input_ids = self.file[f'{split}/html_content'][:]
+            html_input_ids = self.file[f'{split}/html_input_ids'][:]
+
+            html_input_ids = [torch.tensor(item, dtype=torch.long) for item in html_input_ids]
+            self.html_input_ids = html_input_ids
 
         if 'html_attention_mask' in required_data:
-            self.html_attention_masks = self.file[f'{split}/html_attention_masks'][:]
+            html_attention_masks = self.file[f'{split}/html_attention_masks'][:]
+
+            html_attention_masks = [torch.tensor(item, dtype=torch.float) for item in html_attention_masks]
+            self.html_attention_masks = html_attention_masks
 
         if 'url_input_ids' in required_data:
             self.url_input_ids = self.file[f'{split}/url_input_ids'][:]
@@ -73,10 +79,10 @@ class PhishingDataset(Dataset):
             image = self.transform(screenshot)
 
         input_dict = {
-            'html_input_ids': self.html_input_ids[idx].squeeze() if 'html_input_ids' in self.required_data else None,
-            'html_attention_mask': self.html_attention_masks[idx].squeeze() if 'html_input_ids' in self.required_data else None,
-            'url_input_ids': self.url_input_ids[idx].squeeze() if 'url_input_ids' in self.required_data else None,
-            'url_attention_mask': self.url_attention_masks[idx].squeeze() if 'url_attention_mask' in self.required_data else None,
+            'html_input_ids': self.html_input_ids[idx] if 'html_input_ids' in self.required_data else None,
+            'html_attention_mask': self.html_attention_masks[idx] if 'html_input_ids' in self.required_data else None,
+            'url_input_ids': self.url_input_ids[idx] if 'url_input_ids' in self.required_data else None,
+            'url_attention_mask': self.url_attention_masks[idx] if 'url_attention_mask' in self.required_data else None,
             'image': image if image is not None and image.numel() > 0 else None,
             'label': label
         }
