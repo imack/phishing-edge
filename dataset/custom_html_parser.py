@@ -9,8 +9,10 @@ class CustomHTML2Text(html2text.HTML2Text):
 
         # Extract the title
         title_tag = soup.find("title")
-        if title_tag:
+        if title_tag and title_tag.string:
             retained_tags.append(f"Title: {title_tag.string.strip()}")
+        else:
+            retained_tags.append("Title: None")
 
         # Extract meta tags and flatten them
         for meta in soup.find_all("meta"):
