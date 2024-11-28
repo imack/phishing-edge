@@ -10,6 +10,9 @@ def get_filtered_inputs(batch):
     url_input_ids = batch['url_input_ids'].to(device) if 'url_input_ids' in batch else None
     url_attention_mask = batch['url_attention_mask'].to(device) if 'url_attention_mask' in batch else None
 
+    longformer_input_ids = batch['longformer_input_ids'].to(device) if 'longformer_input_ids' in batch else None
+    longformer_attention_mask = batch['longformer_attention_mask'].to(device) if 'longformer_input_ids' in batch else None
+
     html_input_ids = batch['html_input_ids'].to(device) if 'html_input_ids' in batch else None
     html_attention_mask = batch['html_attention_mask'].to(device) if 'html_attention_mask' in batch else None
 
@@ -17,6 +20,8 @@ def get_filtered_inputs(batch):
         'image': images,
         'url_input_ids': url_input_ids,
         'url_attention_mask': url_attention_mask,
+        'longformer_input_ids': longformer_input_ids,
+        'longformer_attention_mask': longformer_attention_mask,
         'html_input_ids': html_input_ids,
         'html_attention_mask': html_attention_mask
     }
