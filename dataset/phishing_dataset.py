@@ -5,7 +5,6 @@ import os
 import boto3
 import time
 from transformers import DistilBertTokenizer
-import torchvision.transforms as transforms
 
 S3_PATH = 's3://phishing-edge/dataset/phishing_output_tokenized.h5'
 LOCAL_CACHE_PATH = '/tmp/phishing_output_tokenized.h5'
@@ -29,7 +28,7 @@ class PhishingDataset(Dataset):
 
         self.file = h5py.File(local_file_path, 'r')
         self.labels = self.file[f'{split}/labels'][:]
-        self.images = self.file[f'{split}/image'][:]
+        self.images = self.file[f'{split}/images'][:]
         self.urls = self.file[f'{split}/urls'][:]
 
         if 'html_input_ids' in required_data:
