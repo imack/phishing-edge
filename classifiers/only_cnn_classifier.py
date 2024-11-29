@@ -2,9 +2,9 @@ import torch.nn as nn
 
 from torchvision import models
 
-class PhishingClassifier(nn.Module):
+class BasicCNNClassifier(nn.Module):
     def __init__(self):
-        super(PhishingClassifier, self).__init__()
+        super(BasicCNNClassifier, self).__init__()
         self.cnn = models.resnet18(pretrained=True)
         self.cnn_fc_features = self.cnn.fc.in_features
         self.cnn.fc = nn.Identity()  # Remove the classification layer

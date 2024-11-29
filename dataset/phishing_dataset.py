@@ -31,6 +31,9 @@ class PhishingDataset(Dataset):
         self.images = self.file[f'{split}/images'][:]
         self.urls = self.file[f'{split}/urls'][:]
 
+        if 'html_content' in required_data:
+            self.html_content = self.file[f'{split}/html_content'][:]
+
         if 'html_input_ids' in required_data:
             html_input_ids = self.file[f'{split}/html_input_ids'][:]
 
@@ -82,6 +85,7 @@ class PhishingDataset(Dataset):
             'url_attention_mask': self.url_attention_masks[idx] if 'url_attention_mask' in self.required_data else None,
             'url': self.urls[idx].decode('utf-8') if 'url' in self.required_data else None,
             'image': self.images[idx] if 'image' in self.required_data else None,
+            'html_content': str(self.html_content[idx]) if 'html_content' in self.required_data else None,
             'label': label
         }
 
