@@ -6,8 +6,8 @@ class BasicUrlSkinnyBertClassifier(nn.Module):
         super(BasicUrlSkinnyBertClassifier, self).__init__()
 
         self.bert = DistilBertModel.from_pretrained('distilbert-base-uncased')
-        # Use only the first 2 layers
-        self.bert.transformer.layer = self.bert.transformer.layer[:2]
+        # Use only the first 4 layers
+        self.bert.transformer.layer = self.bert.transformer.layer[:4]
 
         self.classifier = nn.Linear(self.bert.config.hidden_size, 2)
 
