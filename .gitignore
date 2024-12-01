@@ -3,3 +3,4 @@ dataset.h5
 *.pt
 runs
 old_runs
+scratch.ipynb
