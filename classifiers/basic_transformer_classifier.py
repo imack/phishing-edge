@@ -8,8 +8,6 @@ class BasicTransformerClassifier(nn.Module):
         self.classifier = nn.Linear(self.bert.config.hidden_size, 2)
 
     def forward(self, html_input_ids, html_attention_mask):
-        html_input_ids = html_input_ids[:, 0, :]
-        html_attention_mask = html_attention_mask[:,0,:]
         outputs = self.bert(input_ids=html_input_ids, attention_mask=html_attention_mask)
         logits = self.classifier(outputs.last_hidden_state[:, 0, :])
         return logits

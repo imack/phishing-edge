@@ -5,6 +5,7 @@ import os
 import boto3
 import time
 from transformers import DistilBertTokenizer
+import numpy as np
 
 S3_PATH = 's3://phishing-edge/dataset/phishing_output_tokenized.h5'
 LOCAL_CACHE_PATH = '/tmp/phishing_output_tokenized.h5'
@@ -36,14 +37,24 @@ class PhishingDataset(Dataset):
 
         if 'html_input_ids' in required_data:
             html_input_ids = self.file[f'{split}/html_input_ids'][:]
+            # we did some experiments with longer tokens, but we just want the first chunk of each
+            first_chunks = []
+            for entry in html_input_ids:
+                first_chunk = entry[:512]
+                first_chunks.append(first_chunk)
+            first_chunks = np.array(first_chunks)
 
-            html_input_ids = [torch.tensor(item, dtype=torch.long) for item in html_input_ids]
+            html_input_ids = [torch.tensor(item, dtype=torch.long) for item in first_chunks]
             self.html_input_ids = html_input_ids
 
         if 'html_attention_mask' in required_data:
             html_attention_masks = self.file[f'{split}/html_attention_masks'][:]
-
-            html_attention_masks = [torch.tensor(item, dtype=torch.float) for item in html_attention_masks]
+            first_chunks = []
+            for entry in html_attention_masks:
+                first_chunk = entry[:512]
+                first_chunks.append(first_chunk)
+            first_chunks = np.array(first_chunks)
+            html_attention_masks = [torch.tensor(item, dtype=torch.float) for item in first_chunks]
             self.html_attention_masks = html_attention_masks
 
         if 'longformer_input_ids' in required_data:
