@@ -5,6 +5,21 @@ This project is part of Stanford's CS230 course and focuses on using deep learni
 
 ## Project Structure
 
+- **/**: Main project directory
+  - **classifiers/**: long list of classifiers attempts (not all worked)
+  - **datset/**: Notebooks and parsers used to create datasets
+    - `chunking_dataset.ipynb`: Takes initial h5 file and makes formatted embeddings and vectors for inputs
+    - `custom_html_parser.py`: Custom html2text parser that includes titles, meta tags, and unique domains of links
+    - `datset_stats.ipynb`: notebook to run some basic stats on token lengths, etc
+    - `phishing_dataset.py`: PyTorch dataset file we call with data loader
+    - `datasetcreation.ipynb`: Takes postgres db of collected webpage information and creates initial h5py file (initial collection out of scope for project)
+  - **interpretabilty/**: Notebooks for heat map SHAP analysis, and error analysis
+  - `remote.ipynb`: notebook we use to invoke training jobs in AWS sagemaker from localhost
+  - `test_harness.py`: helper class to setup tests so classifiers can be very code light
+  - `train.ipynb` Notebook we use to start most of our local tests. Mostly swapping out classifier classes and hyperparameters.
+  - `train.py` file used in AWS environments to run training job
+
+
 
 ## Requirements
 To set up the project environment, install the required dependencies using the following command:
@@ -27,7 +42,7 @@ pip install -r requirements.txt
 ## Project Objectives
 Goal: Develop a deep learning model to classify websites as phishing or legitimate based on features extracted from the website URL, HTML content, and images.
 Dataset: The dataset will consist of legitimate and phishing site data collected from open-source repositories and through web scraping techniques.
-Modeling Approach: We will use a combination of convolutional neural networks (CNNs) for image-based analysis and recurrent neural networks (RNNs) or transformers for text-based analysis.
+Modeling Approach: We will use a combination of convolutional neural networks (CNNs) for image-based analysis and transformers for text-based analysis.
 
 ## Dataset
 Sources: Datasets for phishing and legitimate websites will be collected from various sources like PhishTank, and additional data may be scraped from the web using the requests and BeautifulSoup libraries.
@@ -38,7 +53,6 @@ Input Features:
 URL analysis: Tokenized URLs to capture patterns commonly associated with phishing sites.
 HTML structure: Parsed HTML tags and structure, extracting key elements that distinguish phishing pages from legitimate ones.
 Image analysis: Screenshots of web pages analyzed through a CNN to detect visual clues that may indicate phishing.
-Model Details: TBD (To be filled in as the project progresses)
 
 ## Training
 Training Data: A mix of phishing and legitimate website data.
@@ -46,13 +60,6 @@ Loss Function: Cross-entropy loss for binary classification.
 Evaluation Metrics: Accuracy, Precision, Recall, F1-score, and AUC-ROC for model performance.
 Results
 The results of the trained model will be evaluated on a test set to assess its accuracy and ability to generalize to unseen data.
-
-## Usage
-Once trained, the model can be used to classify websites into phishing or legitimate. Here's an example of how to run the model:
-
-```bash
-python src/detect_phishing.py --input <website_url> 
-```
 
 
 ## Future Work
